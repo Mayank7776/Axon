@@ -1,0 +1,14 @@
+fastapi[standard]
+sqlalchemy
+asyncpg
+psycopg2-binary
+alembic
+pydantic-settings
+python-dotenv
+sqlalchemy-utils
+pyjwt
+pwdlib[argon2]
+fastapi-mail
+groq
+resend
+

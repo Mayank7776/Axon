@@ -1,1 +1,12 @@
--r requirements.txt
+-r requirements.txt   # Install main dependencies first
+
+black                 # Code formatter
+ruff                  # Linter/code quality checker
+
+pytest                # Testing framework
+pytest-asyncio        # Async testing support
+pytest-cov            # Test coverage reports
+
+httpx                 # API testing client
+
+pre-commit            # Run checks before git commit
