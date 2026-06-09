@@ -11,4 +11,4 @@ pwdlib[argon2]
 fastapi-mail
 groq
 resend
-
+slowapi
