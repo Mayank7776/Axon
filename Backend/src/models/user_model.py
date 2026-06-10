@@ -11,7 +11,7 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    role_id = Column(String(36), ForeignKey("roles.id"), nullable=False)
+    role_id = Column(String(36), ForeignKey("roles.id"), nullable=False, index=True)
     username = Column(String(255), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)

@@ -11,7 +11,7 @@ class ExerciseMedia(Base):
     __tablename__ = "exercise_media"
  
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    exercise_id = Column(String(36), ForeignKey("exercises.id", ondelete="CASCADE"), nullable=False)
+    exercise_id = Column(String(36), ForeignKey("exercises.id", ondelete="CASCADE"), nullable=False, index=True)
     media_type = Column(
         Enum("image", "video", name="media_type_enum"),
         nullable=False

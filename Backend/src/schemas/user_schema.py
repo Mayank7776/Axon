@@ -6,7 +6,7 @@ class addUser(BaseModel):
     email: str = Field(..., min_length=5, max_length=255)
     password: str = Field(..., min_length=8, max_length=128)
     username: str = Field(..., min_length=2, max_length=100)
-    role_id: str = Field(default=None)
+    role_id: str = Field(...)
     
 class updateUser(BaseModel):
     email: Optional[str] = Field(default=None, min_length=5, max_length=255)

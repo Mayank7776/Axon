@@ -11,8 +11,8 @@ class Exercise(Base):
     __tablename__ = "exercises"
  
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    muscle_group_id = Column(String(36), ForeignKey("muscle_groups.id", ondelete="CASCADE"), nullable=False)
-    created_by = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    muscle_group_id = Column(String(36), ForeignKey("muscle_groups.id", ondelete="CASCADE"), nullable=False, index=True)
+    created_by = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
     name = Column(String(200), nullable=False)
     description = Column(Text, nullable=True)
     category = Column(

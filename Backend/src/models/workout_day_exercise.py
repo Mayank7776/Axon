@@ -2,6 +2,7 @@ from sqlalchemy import JSON, Column, Integer, String, ForeignKey, DateTime #type
 from datetime import datetime, timezone #type: ignore
 from src.core.db import Base
 from sqlalchemy.orm import relationship #type: ignore
+from sqlalchemy.ext.mutable import MutableList #type: ignore
 import uuid
 
 def utc_now():
@@ -30,9 +31,9 @@ class WorkoutDayExercise(Base):
     __tablename__ = "workout_day_exercises"
  
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    day_id = Column(String(36), ForeignKey("workout_days.id", ondelete="CASCADE"), nullable=False)
-    exercise_id = Column(String(36), ForeignKey("exercises.id", ondelete="CASCADE"), nullable=False)
-    sets_data = Column(JSON, nullable=False, default=list)
+    day_id = Column(String(36), ForeignKey("workout_days.id", ondelete="CASCADE"), nullable=False, index=True)
+    exercise_id = Column(String(36), ForeignKey("exercises.id", ondelete="CASCADE"), nullable=False, index=True)
+    sets_data = Column(MutableList.as_mutable(JSON), nullable=False, default=list)
     # ^^^ list of set objects — see docstring above for shape
     sort_order = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime(timezone=True), default=utc_now)

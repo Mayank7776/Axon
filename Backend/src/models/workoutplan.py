@@ -11,7 +11,7 @@ class WorkoutPlan(Base):
     __tablename__ = "workout_plans"
  
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     name = Column(String(200), nullable=False)
     notes = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), default=utc_now)

@@ -11,7 +11,7 @@ class WorkoutDay(Base):
     __tablename__ = "workout_days"
  
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    plan_id = Column(String(36), ForeignKey("workout_plans.id", ondelete="CASCADE"), nullable=False)
+    plan_id = Column(String(36), ForeignKey("workout_plans.id", ondelete="CASCADE"), nullable=False, index=True)
     day_number = Column(Integer, nullable=False)
     label = Column(String(100), nullable=True)   # e.g. "Push Day", "Leg Day", "Rest"
     created_at = Column(DateTime(timezone=True), default=utc_now)
