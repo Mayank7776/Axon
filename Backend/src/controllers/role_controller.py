@@ -8,21 +8,21 @@ router = APIRouter()
 
 @router.get("/", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-def get_roles(req: Request , db: Session = Depends(get_db)):
+def get_roles(request: Request , db: Session = Depends(get_db)):
     return get_all_roles(db)    
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 @limiter.limit("5/minute")
-def create_role(req: Request , body: addRole, db: Session = Depends(get_db)):
+def create_role(request: Request , body: addRole, db: Session = Depends(get_db)):
     return add_role(body, db)
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-def update_role(req: Request , id: str, body: updateRole, db: Session = Depends(get_db)):
+def update_role(request: Request , id: str, body: updateRole, db: Session = Depends(get_db)):
     return update_role_by_id(id, body, db)
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 @limiter.limit("5/minute")
-def delete_role(req: Request , id: str, db: Session = Depends(get_db)):
+def delete_role(request: Request , id: str, db: Session = Depends(get_db)):
     return delete_role_by_id(id, db)  
 

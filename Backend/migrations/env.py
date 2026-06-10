@@ -9,6 +9,14 @@ from src.core.settings import settings
 from src.core.db import Base
 from src.models.user_model import User
 from src.models.role_model import Role
+from src.models.chat_messages import ChatMessage
+from src.models.chat_sessions import ChatSession
+from src.models.excercise import Exercise
+from src.models.media_model import ExerciseMedia
+from src.models.muscle_group import MuscleGroup
+from src.models.workout_day_excercise import WorkoutDayExercise
+from src.models.workoutday import WorkoutDay
+from src.models.workoutplan import WorkoutPlan
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

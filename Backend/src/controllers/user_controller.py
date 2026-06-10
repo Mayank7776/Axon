@@ -9,25 +9,25 @@ router = APIRouter()
 
 @router.get("/", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-def get_users(req: Request , filter: DataTableFilter = Depends(), db: Session = Depends(get_db)):
+def get_users(request: Request , filter: DataTableFilter = Depends(), db: Session = Depends(get_db)):
     return get_all_users(filter, db)
 
 @router.get("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-def get_user(req: Request , id: str, db: Session = Depends(get_db)):
+def get_user(request: Request , id: str, db: Session = Depends(get_db)):
     return get_user_by_id(id, db)
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 @limiter.limit("5/minute")
-def create_user(req: Request , body: addUser, db: Session = Depends(get_db)):
+def create_user(request: Request , body: addUser, db: Session = Depends(get_db)):
     return add_user(body, db)
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-def update_user(req: Request , id: str, body: updateUser, db: Session = Depends(get_db)):
+def update_user(request: Request , id: str, body: updateUser, db: Session = Depends(get_db)):
     return update_user_by_id(id, body, db)
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 @limiter.limit("5/minute")
-def delete_user(req: Request , id: str, db: Session = Depends(get_db)):
+def delete_user(request: Request , id: str, db: Session = Depends(get_db)):
     return delete_user_by_id(id, db)
