@@ -34,6 +34,16 @@ class Settings(BaseSettings):
     # AI Integration (use KEY=value only)
     GROQ_API_KEY: str
     GROQ_MODEL: str
+    
+    # PROMPTS 
+    TRAINER_SYSTEM_PROMPT: str
+    NUTRITION_SYSTEM_PROMPT: str
+    DESIGNER_SYSTEM_PROMPT: str
+    
+    # CLOUDINARY API KEY 
+    CLOUDINARY_CLOUD_NAME: str
+    CLOUDINARY_API_KEY: str
+    CLOUDINARY_API_SECRET: str
 
     # Logging: use DEBUG to see message previews in the terminal
     LOG_LEVEL: str

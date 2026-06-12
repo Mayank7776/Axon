@@ -12,3 +12,4 @@ fastapi-mail
 groq
 resend
 slowapi
+cloudinary

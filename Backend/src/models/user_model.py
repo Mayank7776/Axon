@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, DateTime #type: ignore
+from sqlalchemy import Column, String, ForeignKey, DateTime, Boolean #type: ignore
 from datetime import datetime, timezone #type: ignore
 from src.core.db import Base
 from sqlalchemy.orm import relationship #type: ignore
@@ -15,6 +15,7 @@ class User(Base):
     username = Column(String(255), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime(timezone=True), default=utc_now)
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
     
@@ -23,3 +24,4 @@ class User(Base):
     chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
     exercises_created = relationship("Exercise", back_populates="created_by_user", foreign_keys="Exercise.created_by")
     workout_plans = relationship("WorkoutPlan", back_populates="user", cascade="all, delete-orphan")    
+    refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")

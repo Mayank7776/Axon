@@ -5,6 +5,13 @@ from src.models.role_model import Role
 from src.schemas.user_schema import *
 from src.utils.datatable import DataTableFilter
 from src.utils.response import Response
+from pwdlib import PasswordHash #type:ignore
+from pwdlib.hashers.argon2 import Argon2Hasher #type:ignore
+
+_password_hash = PasswordHash([Argon2Hasher()])
+
+def _hash_password(password: str) -> str:
+    return _password_hash.hash(password)
 
 def get_all_users(filter: DataTableFilter, db: Session):
     # Perform outer join with Role to allow searching and sorting on role columns
@@ -121,7 +128,7 @@ def add_user(body: addUser, db: Session):
     new_user = User(
         username=body.username,
         email=body.email,
-        hashed_password=body.password,  # In production, hash the password!
+        hashed_password=_hash_password(body.password),
         role_id=body.role_id
     )
     db.add(new_user)
@@ -198,7 +205,10 @@ def update_user_by_id(id: str, body: updateUser, db: Session):
             )
 
     for field, value in update_data.items():
-        setattr(user, field, value)
+        if field == "password":
+            user.hashed_password = _hash_password(value)
+        else:
+            setattr(user, field, value)
 
     db.commit()
     db.refresh(user)

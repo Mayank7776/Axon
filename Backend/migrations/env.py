@@ -17,6 +17,8 @@ from src.models.muscle_group import MuscleGroup
 from src.models.workout_day_exercise import WorkoutDayExercise
 from src.models.workoutday import WorkoutDay
 from src.models.workoutplan import WorkoutPlan
+from src.models.refresh_token import RefreshToken
+from src.models.otp_model import LoginOtp
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
