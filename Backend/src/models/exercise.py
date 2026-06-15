@@ -27,8 +27,9 @@ class Exercise(Base):
     muscle_group = relationship("MuscleGroup", back_populates="exercises")
     created_by_user = relationship("User", back_populates="exercises_created", foreign_keys=[created_by])
     media = relationship(
-        "ExerciseMedia", back_populates="exercise",
+        "Media",
+        primaryjoin="and_(Exercise.id==foreign(Media.entity_id), Media.entity_type=='exercise')",
         cascade="all, delete-orphan",
-        order_by="ExerciseMedia.sort_order"
+        order_by="Media.sort_order"
     )
     workout_day_exercises = relationship("WorkoutDayExercise", back_populates="exercise")

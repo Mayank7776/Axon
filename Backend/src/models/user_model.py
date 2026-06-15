@@ -25,3 +25,4 @@ class User(Base):
     exercises_created = relationship("Exercise", back_populates="created_by_user", foreign_keys="Exercise.created_by")
     workout_plans = relationship("WorkoutPlan", back_populates="user", cascade="all, delete-orphan")    
     refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
+    nutrition_charts = relationship("NutritionChart", back_populates="creator", cascade="all, delete-orphan")

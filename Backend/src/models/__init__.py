@@ -3,7 +3,9 @@ from src.models.role_model import Role
 from src.models.chat_sessions import ChatSession
 from src.models.chat_messages import ChatMessage
 from src.models.exercise import Exercise
-from src.models.media_model import ExerciseMedia
+from src.models.media_model import Media
+from src.models.health_blog import Blog
+from src.models.nutrition_chart import NutritionChart
 from src.models.muscle_group import MuscleGroup
 from src.models.otp_model import LoginOtp
 from src.models.refresh_token import RefreshToken
