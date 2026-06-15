@@ -11,26 +11,8 @@ def utc_now():
 class LoginOtp(Base):
     __tablename__ = "login_otps"
 
-    id = Column(
-        String(36),
-        primary_key=True,
-        default=lambda: str(uuid.uuid4())
-    )
-
-    user_id = Column(
-        String(36),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
-    )
-
-    otp = Column(
-        String(6),
-        nullable=False
-    )
-
-    expires_at = Column(
-        DateTime(timezone=True),
-        nullable=False
-    )
-
+    id = Column(String(36),primary_key=True,default=lambda: str(uuid.uuid4()))
+    user_id = Column(String(36),ForeignKey("users.id", ondelete="CASCADE"),nullable=False)
+    otp = Column(String(6),nullable=False)
+    expires_at = Column(DateTime(timezone=True),nullable=False)
     user = relationship("User")
