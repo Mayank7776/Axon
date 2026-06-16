@@ -249,7 +249,6 @@ async def send_otp(body: LoginWithOtpRequest, db: Session):
 # ─────────────────────────────────────────────
 # Login with OTP  — step 2: verify OTP → issue tokens
 # ─────────────────────────────────────────────
-
 def verify_otp(body: VerifyOtpRequest, db: Session):
     user = _get_user_or_404(db, body.email)
 
@@ -295,14 +294,12 @@ def verify_otp(body: VerifyOtpRequest, db: Session):
 # ─────────────────────────────────────────────
 # Resend OTP
 # ─────────────────────────────────────────────
-
 async def resend_otp(body: LoginWithOtpRequest, db: Session):
     return await send_otp(body, db)
 
 # ─────────────────────────────────────────────
 # User Authenticated Or Not Check
 # ─────────────────────────────────────────────
-
 def is_authenticated(current_user: User) -> dict:
     return {
         "status": "authenticated",
@@ -316,7 +313,6 @@ def is_authenticated(current_user: User) -> dict:
 # ─────────────────────────────────────────────
 # Generate New Refresh token and access token 
 # ─────────────────────────────────────────────
-
 async def generate_refresh_access_token(
     body: RefreshTokenRequest,
     db: Session

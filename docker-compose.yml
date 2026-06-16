@@ -12,6 +12,8 @@ services:
 
     volumes:
       - ./Backend:/app
+      - /app/venv
+      - /app/.venv
 
   frontend:
     build:
@@ -26,3 +28,4 @@ services:
     volumes:
       - ./Frontend:/app
       - /app/node_modules
+      - /app/.angular
