@@ -1,9 +1,11 @@
+from typing import Optional
 from fastapi import APIRouter, Request, Depends #type: ignore
 from sqlalchemy.orm import Session #type:ignore
 from src.utils.rate_limiting import limiter
 from src.core.db import get_db
 from src.services.myworkout_service import *
-from src.schemas.myworkout_schema import UpsertWorkoutPlanMetadata, UpsertWorkoutDay, SaveAIWorkoutPlanPayload
+from src.schemas.myworkout_schema import UpsertWorkoutPlanMetadata, UpsertWorkoutDay, SaveAIWorkoutPlanPayload, SaveUserWorkoutStatsPayload
+
 
 router = APIRouter()
 
@@ -51,5 +53,21 @@ async def delete_myworkout_day(request: Request, id: str, db: Session = Depends(
 @limiter.limit("20/minute")
 async def save_ai_myworkout_plan(request: Request, body: SaveAIWorkoutPlanPayload, db: Session = Depends(get_db)):
     return save_ai_workout_plan(body, db)
+
+@router.get("/active-day")
+@limiter.limit("20/minute")
+async def get_active_myworkout_day(request: Request, user_id: str, date: Optional[str] = None, db: Session = Depends(get_db)):
+    return get_active_workout_day(user_id, date, db)
+
+@router.post("/save-workout-stats")
+@limiter.limit("20/minute")
+async def save_myworkout_stats(request: Request, body: SaveUserWorkoutStatsPayload, db: Session = Depends(get_db)):
+    return save_user_workout_stats(body, db)
+
+@router.get("/workout-stats/{user_id}")
+@limiter.limit("20/minute")
+async def get_myworkout_stats(request: Request, user_id: str, db: Session = Depends(get_db)):
+    return get_user_workout_stats_service(user_id, db)
+
 
 

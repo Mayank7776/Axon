@@ -59,3 +59,25 @@ class SaveAIWorkoutPlanPayload(BaseModel):
     name: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = None
     days: List[AIDayItem] = Field(...)
+
+class WorkoutStatsSetItem(BaseModel):
+    set_number: int = Field(..., ge=1)
+    target_reps: int = Field(..., ge=1)
+    reps_performed: Optional[int] = None
+    weight_kg: Optional[float] = None
+    rest_seconds: Optional[int] = None
+    is_completed: bool = Field(default=False)
+
+class WorkoutStatsExerciseItem(BaseModel):
+    exercise_id: str = Field(...)
+    exercise_name: str = Field(...)
+    sort_order: int = Field(..., ge=0)
+    sets: List[WorkoutStatsSetItem] = Field(...)
+
+class SaveUserWorkoutStatsPayload(BaseModel):
+    user_id: str = Field(...)
+    workout_plan_id: str = Field(...)
+    day_number: int = Field(..., ge=1, le=7)
+    day_label: Optional[str] = None
+    exercises_data: List[WorkoutStatsExerciseItem] = Field(...)
+
