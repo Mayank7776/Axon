@@ -14,10 +14,10 @@ class WorkoutDayExercise(Base):
  
     sets_data JSON structure:
     [
-        { "set_number": 1, "reps": 8,  "weight_kg": 100.0, "rest_seconds": 90 },
-        { "set_number": 2, "reps": 6,  "weight_kg": 105.0, "rest_seconds": 90 },
-        { "set_number": 3, "reps": 6,  "weight_kg": 105.0, "rest_seconds": 120 },
-        { "set_number": 4, "reps": 4,  "weight_kg": 110.0, "rest_seconds": 120 }
+        { "set_number": 1,  target_reps:12 , "reps_performed": 8,  "weight_kg": 100.0, "rest_seconds": 90 },
+        { "set_number": 2,  target_reps:12 , "reps_performed": 6,  "weight_kg": 105.0, "rest_seconds": 90 },
+        { "set_number": 3,  target_reps:12 , "reps_performed": 6,  "weight_kg": 105.0, "rest_seconds": 120 },
+        { "set_number": 4,  target_reps:12 , "reps_performed": 4,  "weight_kg": 110.0, "rest_seconds": 120 }
     ]
  
     Optional fields per set (all nullable so bodyweight / cardio work too):

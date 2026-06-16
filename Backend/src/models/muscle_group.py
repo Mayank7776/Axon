@@ -14,6 +14,7 @@ class MuscleGroup(Base):
     name = Column(String(100), nullable=False)
     slug = Column(String(100), unique=True, nullable=False)
     icon_url = Column(String(500), nullable=True)
+    icon_public_id = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), default=utc_now)
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
  

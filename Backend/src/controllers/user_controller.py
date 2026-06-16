@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, status #type: ignore
+from fastapi import APIRouter, Depends, Request, status, File, Form, UploadFile #type: ignore
 from src.services.user_service import *
 from sqlalchemy.orm import Session #type: ignore
 from src.core.db import get_db
@@ -19,13 +19,32 @@ def get_user(request: Request , id: str, db: Session = Depends(get_db)):
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 @limiter.limit("5/minute")
-def create_user(request: Request , body: addUser, db: Session = Depends(get_db)):
-    return add_user(body, db)
+async def create_user(
+    request: Request,
+    username: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    role_id: str = Form(...),
+    image: UploadFile | None = File(None),
+    db: Session = Depends(get_db),
+):
+    body = addUser(username=username, email=email, password=password, role_id=role_id)
+    return add_user(body, image, db)
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-def update_user(request: Request , id: str, body: updateUser, db: Session = Depends(get_db)):
-    return update_user_by_id(id, body, db)
+async def update_user(
+    request: Request,
+    id: str,
+    username: str | None = Form(None),
+    email: str | None = Form(None),
+    password: str | None = Form(None),
+    role_id: str | None = Form(None),
+    image: UploadFile | None = File(None),
+    db: Session = Depends(get_db),
+):
+    body = updateUser(username=username, email=email, password=password, role_id=role_id)
+    return update_user_by_id(id, body, image, db)
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 @limiter.limit("5/minute")

@@ -26,3 +26,11 @@ class User(Base):
     workout_plans = relationship("WorkoutPlan", back_populates="user", cascade="all, delete-orphan")    
     refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
     nutrition_charts = relationship("NutritionChart", back_populates="creator", cascade="all, delete-orphan")
+    media = relationship("Media", primaryjoin="and_(User.id==foreign(Media.entity_id), Media.entity_type=='user_profile')", cascade="all, delete-orphan")
+
+    @property
+    def profile_image(self) -> str:
+        for m in self.media:
+            if m.media_type == "image":
+                return m.cdn_url
+        return "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"

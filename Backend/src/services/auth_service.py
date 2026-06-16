@@ -307,6 +307,7 @@ def is_authenticated(current_user: User) -> dict:
             "id": str(current_user.id),
             "username": current_user.username,
             "email": current_user.email,
+            "profile_image": current_user.profile_image,
         }
     }
     

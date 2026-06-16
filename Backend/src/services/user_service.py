@@ -2,11 +2,14 @@ from sqlalchemy.orm import Session #type: ignore
 from sqlalchemy import or_ #type: ignore
 from src.models.user_model import User
 from src.models.role_model import Role
+from src.models.media_model import Media
 from src.schemas.user_schema import *
 from src.utils.datatable import DataTableFilter
 from src.utils.response import Response
 from pwdlib import PasswordHash #type:ignore
 from pwdlib.hashers.argon2 import Argon2Hasher #type:ignore
+from src.services.cloudinary_service import upload_image, delete_image
+from fastapi import UploadFile #type:ignore
 
 _password_hash = PasswordHash([Argon2Hasher()])
 
@@ -70,7 +73,8 @@ def get_all_users(filter: DataTableFilter, db: Session):
             "role_id": u.role_id,
             "role_name": u.role.name if u.role else None,
             "created_at": u.created_at,
-            "updated_at": u.updated_at
+            "updated_at": u.updated_at,
+            "profile_image": u.profile_image
         })
         
     return Response(
@@ -101,7 +105,8 @@ def get_user_by_id(id: str, db: Session):
         "role_id": user.role_id,
         "role_name": user.role.name if user.role else None,
         "created_at": user.created_at,
-        "updated_at": user.updated_at
+        "updated_at": user.updated_at,
+        "profile_image": user.profile_image
     }
     
     return Response(
@@ -110,7 +115,7 @@ def get_user_by_id(id: str, db: Session):
         data=data
     )
 
-def add_user(body: addUser, db: Session):
+def add_user(body: addUser, image: UploadFile | None, db: Session):
     existing_user = db.query(User).filter(
         or_(
             User.username == body.username,
@@ -135,6 +140,23 @@ def add_user(body: addUser, db: Session):
     db.commit()
     db.refresh(new_user)
 
+    if image:
+        upload_result = upload_image(image)
+        db.add(
+            Media(
+                entity_type="user_profile",
+                entity_id=new_user.id,
+                media_type="image",
+                provider="cloudinary",
+                storage_key=upload_result["public_id"],
+                public_id=upload_result["public_id"],
+                cdn_url=upload_result["url"],
+                is_primary=True,
+            )
+        )
+        db.commit()
+        db.refresh(new_user)
+
     return Response(
         success=True,
         message="User created successfully",
@@ -145,11 +167,12 @@ def add_user(body: addUser, db: Session):
             "role_id": new_user.role_id,
             "role_name": new_user.role.name if new_user.role else None,
             "created_at": new_user.created_at,
-            "updated_at": new_user.updated_at
+            "updated_at": new_user.updated_at,
+            "profile_image": new_user.profile_image
         }
     )
 
-def update_user_by_id(id: str, body: updateUser, db: Session):
+def update_user_by_id(id: str, body: updateUser, image: UploadFile | None, db: Session):
 
     user = db.query(User).filter(
         User.id == id
@@ -210,6 +233,32 @@ def update_user_by_id(id: str, body: updateUser, db: Session):
         else:
             setattr(user, field, value)
 
+    if image:
+        old_image = db.query(Media).filter(
+            Media.entity_type == "user_profile",
+            Media.entity_id == user.id,
+            Media.media_type == "image"
+        ).first()
+
+        if old_image:
+            if old_image.public_id:
+                delete_image(old_image.public_id)
+            db.delete(old_image)
+
+        upload_result = upload_image(image)
+        db.add(
+            Media(
+                entity_type="user_profile",
+                entity_id=user.id,
+                media_type="image",
+                provider="cloudinary",
+                storage_key=upload_result["public_id"],
+                public_id=upload_result["public_id"],
+                cdn_url=upload_result["url"],
+                is_primary=True,
+            )
+        )
+
     db.commit()
     db.refresh(user)
 
@@ -217,7 +266,8 @@ def update_user_by_id(id: str, body: updateUser, db: Session):
         success=True,
         message="User updated successfully",
         data={
-            "id": user.id
+            "id": user.id,
+            "profile_image": user.profile_image
         }
     )
 
