@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter #type: ignore
-from src.controllers import user_controller, role_controller, chat_controller, auth_controller, muscles_controller, myworkout_controller, blogs_controller
+from src.controllers import user_controller, role_controller, chat_controller, auth_controller, muscles_controller, myworkout_controller, blogs_controller, notification_controller
 
 from src.utils.rate_limiting import limiter
 from slowapi.errors import RateLimitExceeded #type: ignore  
@@ -28,3 +28,4 @@ app.include_router(auth_controller.router, prefix="/auth", tags=["Auth"])
 app.include_router(muscles_controller.router, prefix="/musclegroup", tags=["Musclesgroup"])
 app.include_router(myworkout_controller.router, prefix="/workout", tags=["My-Workouts"])
 app.include_router(blogs_controller.router, prefix="/blogs", tags=["Blogs"])
+app.include_router(notification_controller.router, prefix="/notifications", tags=["Notifications"])

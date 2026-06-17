@@ -14,4 +14,5 @@ from src.models.workout_day_exercise import WorkoutDayExercise
 from src.models.workoutday import WorkoutDay
 from src.models.workoutplan import WorkoutPlan
 from src.models.user_workout_stats import UserWorkoutStats
+from src.models.notification_model import Notification, UserNotificationRead
 
