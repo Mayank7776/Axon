@@ -23,11 +23,12 @@ class Blog(Base):
     slug = Column(String(255),unique=True,nullable=False,index=True)
     excerpt = Column(String(500),nullable=True)
     content = Column(Text,nullable=False)
-    category = Column(String(100),nullable=True)
+    category_id = Column(String(36), ForeignKey("blog_categories.id", ondelete="SET NULL"), nullable=True)
     is_published = Column(Boolean,default=False,nullable=False)
     created_at = Column(DateTime(timezone=True),default=utc_now)
     updated_at = Column(DateTime(timezone=True),default=utc_now,onupdate=utc_now)
     creator = relationship("User")
+    category = relationship("BlogCategory")
     media = relationship(
         "Media",
         primaryjoin="and_(Blog.id==foreign(Media.entity_id), Media.entity_type=='blog')",
