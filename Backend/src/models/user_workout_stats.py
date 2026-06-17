@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, DateTime, Integer, JSON #type: ignore
+from sqlalchemy import Column, String, ForeignKey, DateTime, Integer, JSON, Date #type: ignore
 from datetime import datetime, timezone #type: ignore
 from src.core.db import Base
 from sqlalchemy.orm import relationship #type: ignore
@@ -45,8 +45,10 @@ class UserWorkoutStats(Base):
     workout_plan_id = Column(String(36), ForeignKey("workout_plans.id", ondelete="CASCADE"), nullable=False, index=True)
     day_number = Column(Integer, nullable=False)
     day_label = Column(String(100), nullable=True)
+    workout_date = Column(Date, nullable=False, index=True)
     exercises_data = Column(JSON, nullable=False, default=list)
     created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at = Column(DateTime(timezone=True), onupdate=utc_now, nullable=True)
 
     # relationships
     user = relationship("User")

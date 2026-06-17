@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session #type: ignore
 from fastapi import HTTPException, status #type: ignore
 from src.models.user_model import User
@@ -75,16 +77,27 @@ def upsert_workout_plan_metadata(body: UpsertWorkoutPlanMetadata, db: Session):
             plan.user_id = body.user_id
             plan.name = body.name
             plan.description = body.description
-            plan.is_active = body.is_active if body.is_active is not None else plan.is_active
+            target_active = body.is_active if body.is_active is not None else plan.is_active
+            plan.is_active = target_active
         else:
+            target_active = body.is_active if body.is_active is not None else False
             plan = WorkoutPlan(
                 user_id=body.user_id,
                 name=body.name,
                 description=body.description,
-                is_active=body.is_active if body.is_active is not None else True
+                is_active=target_active
             )
             db.add(plan)
             
+        db.flush() # ensure plan.id exists for new plans before deactivating others
+
+        # If this plan is active, deactivate all other plans for this user
+        if target_active:
+            db.query(WorkoutPlan).filter(
+                WorkoutPlan.user_id == body.user_id,
+                WorkoutPlan.id != plan.id
+            ).update({WorkoutPlan.is_active: False}, synchronize_session=False)
+
         db.commit()
         db.refresh(plan)
         
@@ -595,6 +608,7 @@ def get_active_workout_day(user_id: str, date_str: Optional[str], db: Session):
                 "day_number": day_number,
                 "day_name": weekday_name,
                 "is_rest_day": True,
+                "date": dt.strftime("%Y-%m-%d"),
                 "exercises": []
             }
         )
@@ -629,9 +643,20 @@ def get_active_workout_day(user_id: str, date_str: Optional[str], db: Session):
             "day_label": day.label,
             "day_name": weekday_name,
             "is_rest_day": False,
+            "date": dt.strftime("%Y-%m-%d"),
             "exercises": ex_list
         }
     )
+
+def _calculate_day_percentage(exercises_data: list) -> float:
+    total_sets = 0
+    completed_sets = 0
+    for ex in exercises_data:
+        for s in ex.get("sets", []):
+            total_sets += 1
+            if s.get("is_completed", False):
+                completed_sets += 1
+    return round((completed_sets / total_sets) * 100.0, 2) if total_sets > 0 else 0.0
 
 def save_user_workout_stats(body: SaveUserWorkoutStatsPayload, db: Session):
     # Verify user exists
@@ -650,7 +675,33 @@ def save_user_workout_stats(body: SaveUserWorkoutStatsPayload, db: Session):
             detail="Workout plan not found"
         )
         
+    # Parse date
+    from datetime import datetime
+    if body.workout_date:
+        try:
+            workout_date = datetime.strptime(body.workout_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid workout date format. Use YYYY-MM-DD"
+            )
+    else:
+        workout_date = datetime.now().date()
+
     try:
+        # Check if there are any records for a different plan for this user.
+        # If so, delete all previous plan records and reset counter to start from Day 1.
+        different_plan_exists = db.query(UserWorkoutStats).filter(
+            UserWorkoutStats.user_id == body.user_id,
+            UserWorkoutStats.workout_plan_id != body.workout_plan_id
+        ).first()
+
+        if different_plan_exists:
+            db.query(UserWorkoutStats).filter(
+                UserWorkoutStats.user_id == body.user_id
+            ).delete(synchronize_session=False)
+            db.flush()
+
         # Convert Pydantic schemas list to simple python list of dicts for JSON column
         exercises_list = []
         for ex in body.exercises_data:
@@ -671,16 +722,39 @@ def save_user_workout_stats(body: SaveUserWorkoutStatsPayload, db: Session):
                 "sets": sets_list
             })
             
-        stats = UserWorkoutStats(
-            user_id=body.user_id,
-            workout_plan_id=body.workout_plan_id,
-            day_number=body.day_number,
-            day_label=body.day_label,
-            exercises_data=exercises_list
-        )
-        db.add(stats)
+        # Check if record already exists for (user_id, date)
+        stats = db.query(UserWorkoutStats).filter(
+            UserWorkoutStats.user_id == body.user_id,
+            UserWorkoutStats.workout_date == workout_date
+        ).first()
+
+        if stats:
+            # Update existing record
+            stats.exercises_data = exercises_list
+            stats.day_number = body.day_number
+            stats.workout_plan_id = body.workout_plan_id
+            # Do not change day_label (it preserves the original label, e.g. "Day 1")
+        else:
+            # Determine dynamic day label (count of distinct workout date records + 1)
+            distinct_days_count = db.query(UserWorkoutStats).filter(
+                UserWorkoutStats.user_id == body.user_id
+            ).count()
+            day_label = f"Day {distinct_days_count + 1}"
+
+            stats = UserWorkoutStats(
+                user_id=body.user_id,
+                workout_plan_id=body.workout_plan_id,
+                day_number=body.day_number,
+                day_label=day_label,
+                workout_date=workout_date,
+                exercises_data=exercises_list
+            )
+            db.add(stats)
+
         db.commit()
         db.refresh(stats)
+        
+        day_percentage = _calculate_day_percentage(exercises_list)
         
         return Response(
             success=True,
@@ -691,8 +765,11 @@ def save_user_workout_stats(body: SaveUserWorkoutStatsPayload, db: Session):
                 "workout_plan_id": stats.workout_plan_id,
                 "day_number": stats.day_number,
                 "day_label": stats.day_label,
+                "workout_date": stats.workout_date.strftime("%Y-%m-%d") if stats.workout_date else None,
                 "exercises_data": stats.exercises_data,
-                "created_at": stats.created_at
+                "day_percentage": day_percentage,
+                "created_at": stats.created_at,
+                "updated_at": stats.updated_at
             }
         )
     except Exception as e:
@@ -715,23 +792,45 @@ def get_user_workout_stats_service(user_id: str, db: Session):
         
     stats_list = db.query(UserWorkoutStats).filter(
         UserWorkoutStats.user_id == user_id
-    ).order_by(UserWorkoutStats.created_at.desc()).all()
+    ).order_by(UserWorkoutStats.workout_date.desc()).all()
     
     data = []
+    total_percentage_sum = 0.0
+    workout_dates = []
+    
     for s in stats_list:
+        day_pct = _calculate_day_percentage(s.exercises_data)
+        total_percentage_sum += day_pct
+        if s.workout_date:
+            workout_dates.append(s.workout_date)
+            
         data.append({
             "id": s.id,
             "user_id": s.user_id,
             "workout_plan_id": s.workout_plan_id,
             "day_number": s.day_number,
             "day_label": s.day_label,
+            "workout_date": s.workout_date.strftime("%Y-%m-%d") if s.workout_date else None,
             "exercises_data": s.exercises_data,
-            "created_at": s.created_at
+            "day_percentage": day_pct,
+            "created_at": s.created_at,
+            "updated_at": s.updated_at
         })
+        
+    if workout_dates:
+        min_date = min(workout_dates)
+        max_date = max(workout_dates)
+        total_days = (max_date - min_date).days + 1
+        total_percentage = round(total_percentage_sum / total_days, 2) if total_days > 0 else 0.0
+    else:
+        total_percentage = 0.0
         
     return Response(
         success=True,
         message="User workout stats retrieved successfully",
-        data=data
+        data={
+            "total_percentage": total_percentage,
+            "stats": data
+        }
     )
 

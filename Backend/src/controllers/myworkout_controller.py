@@ -49,11 +49,14 @@ async def upsert_myworkout_day(request: Request, body: UpsertWorkoutDay, db: Ses
 async def delete_myworkout_day(request: Request, id: str, db: Session = Depends(get_db)):
     return delete_workout_day_by_id(id, db)
 
+# AI Workout plan save -----------------------------------------------------------------------------------------------
 @router.post("/save-ai-plan")
 @limiter.limit("20/minute")
 async def save_ai_myworkout_plan(request: Request, body: SaveAIWorkoutPlanPayload, db: Session = Depends(get_db)):
     return save_ai_workout_plan(body, db)
 
+
+# Workout Stats ------------------------------------------------------------------------------------------------------
 @router.get("/active-day")
 @limiter.limit("20/minute")
 async def get_active_myworkout_day(request: Request, user_id: str, date: Optional[str] = None, db: Session = Depends(get_db)):

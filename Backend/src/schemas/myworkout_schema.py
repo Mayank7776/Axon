@@ -22,7 +22,7 @@ class UpsertWorkoutPlan(BaseModel):
     user_id: str = Field(...)
     name: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = None
-    is_active: Optional[bool] = True
+    is_active: Optional[bool] = False
     days: List[WorkoutDayItem] = Field(...)
 
 class UpsertWorkoutPlanMetadata(BaseModel):
@@ -30,7 +30,7 @@ class UpsertWorkoutPlanMetadata(BaseModel):
     user_id: str = Field(...)
     name: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = None
-    is_active: Optional[bool] = True
+    is_active: Optional[bool] = False
 
 class UpsertWorkoutDay(BaseModel):
     id: Optional[str] = None
@@ -79,5 +79,6 @@ class SaveUserWorkoutStatsPayload(BaseModel):
     workout_plan_id: str = Field(...)
     day_number: int = Field(..., ge=1, le=7)
     day_label: Optional[str] = None
+    workout_date: Optional[str] = None
     exercises_data: List[WorkoutStatsExerciseItem] = Field(...)
 
