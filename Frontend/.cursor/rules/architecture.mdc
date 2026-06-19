@@ -1,0 +1,33 @@
+---
+description: Feature-first folder structure, reusable shared components, and thin components.
+globs: "src/app/**/*"
+---
+# Frontend Architecture Rules
+
+All Frontend files must follow the strict Angular 20+ standalone architecture patterns, separating presentation from state/services.
+
+## Folder Directory Structure
+
+1. **`src/app/features/`**:
+   - Organized by feature domain (e.g., `chat/`, `workouts/`, `profile/`).
+   - Contains components specific to that domain: `basename.ts`, `basename.html`, `basename.css`.
+2. **`src/app/services/`**:
+   - Contains core API communication service class wrappers (e.g. `User`, `Blog`, `Auth`) that encapsulate API interactions.
+3. **`src/app/models/`**:
+   - Holds shared TypeScript interfaces, classes, or types (e.g. `DataTableFilter` in `datatable.ts`).
+4. **`src/app/shared/`**:
+   - Reusable standalone UI elements (buttons, layout cards, loaders, widgets).
+5. **`src/app/core/`**:
+   - Global singleton logic (route guards like `authGuard` and `guestGuard`, interceptors, constants).
+
+## Component Guidelines
+
+- **Thin Components**: Components must focus strictly on binding variables to the HTML, handling UI states, and listening to user actions.
+- **Service Delegation**: Delegate network queries, caching, state alterations, and business calculations to Services.
+- **Lazy Loading**: All feature routes must be lazy-loaded in `app.routes.ts`:
+  ```typescript
+  {
+    path: 'home',
+    loadComponent: () => import('./features/home/home').then(m => m.Home)
+  }
+  ```

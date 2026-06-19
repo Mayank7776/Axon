@@ -1,0 +1,37 @@
+---
+description: RxJS Stream pipelines, subscription cleanups, and avoiding nested subscribes.
+globs: "src/app/**/*.ts"
+---
+# RxJS Development Rules
+
+All asynchronous actions, event streams, and API queries must be handled reactively using RxJS patterns.
+
+## RxJS Rules
+
+1. **Subscription Cleanup**:
+   - To prevent memory leaks, subscriptions must be cleaned up when a component is destroyed.
+   - Prefer using the `async` pipe in templates to handle subscription/unsubscription automatically.
+   - When subscribing manually inside component code, use `takeUntilDestroyed()` from `@angular/core/rxjs-interop`:
+     ```typescript
+     import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+     this.userService.getUsers()
+       .pipe(takeUntilDestroyed())
+       .subscribe(data => this.users.set(data.items));
+     ```
+
+2. **Avoid Nested Subscriptions**:
+   - Never call `.subscribe()` inside another `.subscribe()` block.
+   - Flatten nested requests using operators like `switchMap` (for searches/resets), `mergeMap` (for parallel executions), or `concatMap` (for ordered updates).
+     ```typescript
+     // GOOD: Flattening requests
+     this.searchTerms.pipe(
+       debounceTime(300),
+       distinctUntilChanged(),
+       switchMap(term => this.blogService.searchBlogs(term)),
+       takeUntilDestroyed()
+     ).subscribe(results => this.blogs.set(results));
+     ```
+
+3. **Stream Pipeline Construction**:
+   - Use declarative operations for data transformation (`map`), debug logs/side-effects (`tap`), and error fallback streams (`catchError`).

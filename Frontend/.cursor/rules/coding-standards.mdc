@@ -1,0 +1,36 @@
+---
+description: TypeScript styles, strict type checks, naming conventions, and file structures.
+globs: "src/app/**/*.ts"
+---
+# Frontend Coding Standards
+
+Follow these coding standards to write consistent, clean, and maintainable TypeScript/Angular code.
+
+## Coding Standards Rules
+
+1. **Modern Angular API Usage**:
+   - Use the `inject()` function instead of standard constructor parameter mappings:
+     ```typescript
+     // GOOD
+     private router = inject(Router);
+     ```
+   - Manage component reactive state variables using Angular Signals (`signal`, `computed`) rather than standard mutable properties.
+
+2. **Strict TypeScript & Formatting**:
+   - Avoid using `any` types. Declare explicit interfaces for all request payloads, configurations, and API returns.
+   - Use single quotes for imports and string literals.
+   - Every file must have a single clean export.
+
+3. **Naming Conventions**:
+   - **Classes**:
+     - Standalone components and service classes: PascalCase (e.g. `Login`, `ApiService`, `Auth`).
+   - **Interfaces/Types**:
+     - PascalCase (e.g. `DataTableFilter`).
+   - **Variables & Methods**:
+     - camelCase (e.g. `getUsers`, `isLoading`, `userData`).
+   - **Files**:
+     - Lowercase with hyphens or simple basenames (e.g. `login.ts`, `app.routes.ts`, `main-body.ts`). Recall that files are named directly without `.component.ts` (e.g. `login.ts`).
+
+4. **SOLID Principles**:
+   - Keep files clean and short.
+   - Component classes should have minimal visual-only code. Extract logic to services.

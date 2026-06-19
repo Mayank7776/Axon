@@ -1,0 +1,31 @@
+---
+description: JWT Authentication, refresh tokens, role-based checks, and data ownership validations.
+globs: "src/controllers/**/*.py, src/services/**/*.py"
+---
+# Security Guidelines & Rules
+
+Security is a primary concern. Endpoints must validate authentication, user authorization (roles), resource ownership, and guard secrets.
+
+## Security Rules
+
+1. **Authentication Injection**:
+   - Secure routes by injecting the authenticated user dependency: `current_user: User = Depends(validateToken)` from `src.controllers.dependency.auth_dependency`.
+   - Never extract token payloads manually in endpoint logic. Use the validated dependency.
+
+2. **Data Ownership Check**:
+   - Before mutating or displaying private data, check if the authenticated user owns the resource or has elevated privileges (e.g., an Admin role):
+     ```python
+     if resource.user_id != current_user.id and current_user.role.name != "Admin":
+         raise HTTPException(status_code=403, detail="Not authorized to access this resource")
+     ```
+
+3. **Refresh Tokens**:
+   - Refresh tokens must be stored in the database (`refresh_tokens` table) and tied to a single active session (i.e. deleting previous session tokens upon new logins).
+
+4. **Role-Based Authorization**:
+   - Limit specific controller actions to specific roles (e.g., "Admin", "User", "Trainer") by verifying the `role.name` association.
+
+5. **Secrets & Configurations**:
+   - Never write environment keys or database credentials directly in code.
+   - Reference them through the global settings instance: `from src.core.settings import settings`.
+   - Ensure the `.env` file is in the `.gitignore` checklist.

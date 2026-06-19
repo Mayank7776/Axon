@@ -1,0 +1,37 @@
+---
+description: Dedicated service layer, ApiService injection, environment URLs, and strongly-typed queries.
+globs: "src/app/services/**/*.ts"
+---
+# API Integration Rules
+
+Frontend services must follow these rules to maintain unified API interfaces, loading indicators, and robust error management.
+
+## Integration Rules
+
+1. **HttpClient Wrapper (`ApiService`)**:
+   - Always inject and call `ApiService` (`src/app/services/api.ts`) for performing HTTP calls.
+   - Do not inject `HttpClient` directly into feature services.
+
+2. **Dependency Injection Pattern**:
+   - Use Angular's `inject` function instead of constructor injection:
+     ```typescript
+     import { inject, Injectable } from '@angular/core';
+     import { ApiService } from './api';
+
+     @Injectable({ providedIn: 'root' })
+     export class EntityService {
+       private api = inject(ApiService);
+     }
+     ```
+
+3. **Query Serialization**:
+   - For listing endpoints that accept filters, build query params using `HttpParams` and pass them to the `ApiService` wrapper:
+     ```typescript
+     let params = new HttpParams();
+     // Populate parameters...
+     return this.api.get<ResponseType>('/endpoint', params);
+     ```
+
+4. **Error Handling & Loading States**:
+   - Track active loading states using Angular signals (`isLoading = signal(false)`).
+   - Gracefully trap errors using RxJS handlers (e.g. `catchError`) or interceptors to trigger user-facing alert notifications.

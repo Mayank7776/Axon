@@ -1,0 +1,49 @@
+---
+description: SQLAlchemy ORM rules, UUID keys, eager loading, and Alembic migrations.
+globs: "src/models/**/*.py"
+---
+# Database Guidelines & Rules
+
+All database models must use SQLAlchemy, map relationships explicitly, prevent N+1 queries, and support Postgres-compatible migrations.
+
+## Database Rules
+
+1. **Primary Keys (UUIDs)**:
+   - Primary keys must be UUIDs stored as string of length 36.
+   - Example:
+     ```python
+     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+     ```
+
+2. **Timestamps**:
+   - Always record when records are created/updated using timezone-aware UTC datetime.
+   - Use the local `utc_now` helper:
+     ```python
+     from datetime import datetime, timezone
+
+     def utc_now():
+         return datetime.now(timezone.utc)
+
+     created_at = Column(DateTime(timezone=True), default=utc_now)
+     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
+     ```
+
+3. **Relationships**:
+   - Explicitly define `relationship` with `back_populates` and configuration parameters such as `cascade="all, delete-orphan"` where required.
+   - Example:
+     ```python
+     user = relationship("User", back_populates="workout_plans")
+     ```
+
+4. **Avoiding N+1 Queries**:
+   - Avoid loops that fetch related records for a list of items.
+   - Use eager loading in SQLAlchemy queries via `joinedload` or `selectinload` when returning entities with their nested relations.
+     ```python
+     from sqlalchemy.orm import joinedload
+     blogs = db.query(Blog).options(joinedload(Blog.category)).all()
+     ```
+
+5. **Migrations**:
+   - Every schema change must have a corresponding Alembic migration.
+   - Generate migration files using: `alembic revision --autogenerate -m "Add table_name table"`
+   - Ensure you verify migration contents (especially constraint names and type translations for PostgreSQL) before deploying.

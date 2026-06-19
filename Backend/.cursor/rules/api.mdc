@@ -1,0 +1,68 @@
+---
+description: RESTful API standards, response wrapping, validation, and rate-limiting.
+globs: "src/controllers/**/*.py"
+---
+# API Standards Rules
+
+All API endpoints must follow standard RESTful conventions, return structured response objects, validate data using Pydantic, and implement rate limiting.
+
+## API Rules
+
+1. **RESTful Naming Conventions**:
+   - Resource paths must be plural and lowercase (e.g. `/users`, `/workout-plans`, `/blogs`).
+   - Use standard HTTP methods:
+     - `GET`: Retrieve list or single item.
+     - `POST`: Create a resource.
+     - `PUT`: Update a resource (or patch where suitable).
+     - `DELETE`: Delete a resource.
+
+2. **HTTP Status Codes**:
+   - `GET` / `PUT` / `POST` (update): `status.HTTP_200_OK`
+   - `POST` (create): `status.HTTP_201_CREATED`
+   - `DELETE`: `status.HTTP_204_NO_CONTENT` (if no body is returned) or `200_OK` if returning a success message.
+
+3. **Response Schema Wrapper**:
+   - All controller responses must return an instance of `Response` (`src.utils.response.Response`) wrapping data.
+   - Example structure:
+     ```json
+     {
+       "success": true,
+       "message": "Resource retrieved successfully",
+       "data": { ... }
+     }
+     ```
+
+4. **Input Validation & Forms**:
+   - Define request schemas in `src/schemas/*_schema.py`.
+   - If endpoints accept file uploads, use `Form(...)` and `File(...)` parameters in the controller, then map them to the Pydantic schema using a constructor:
+     ```python
+     body = addSchema(field=field, ...)
+     ```
+
+5. **Rate Limiting**:
+   - Decorate controller routes with `@limiter.limit("X/minute")`.
+   - Always include `request: Request` in the route parameter list so the limiter can track client IPs.
+
+## Example Route Setup
+
+```python
+from fastapi import APIRouter, Depends, Request, status
+from sqlalchemy.orm import Session
+from src.core.db import get_db
+from src.utils.rate_limiting import limiter
+from src.schemas.blog_schema import BlogUpsertSchema
+from src.services.blog_service import upsert_blog_service
+
+router = APIRouter()
+
+@router.post("/upsert", status_code=status.HTTP_200_OK)
+@limiter.limit("5/minute")
+async def upsert_blog(
+    request: Request,
+    id: str | None = Form(None),
+    title: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    body = BlogUpsertSchema(id=id, title=title)
+    return upsert_blog_service(body=body, db=db)
+```

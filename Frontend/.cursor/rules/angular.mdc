@@ -1,0 +1,38 @@
+---
+description: Angular 20+ Standalone component patterns and naming conventions.
+globs: "src/app/**/*.ts"
+---
+# Angular Development Standards
+
+Enforce Angular 20+ standalone component creation rules, standard syntax, decorators, and directory structures.
+
+## Component Creation Rules
+
+1. **Custom Naming Convention**:
+   - Component source files MUST omit the `.component` suffix.
+   - For example:
+     - Component code: `login.ts` (Class name `Login`) instead of `login.component.ts`.
+     - Template: `login.html` instead of `login.component.html`.
+     - Styling: `login.css` instead of `login.component.css`.
+     - Spec: `login.spec.ts` instead of `login.component.spec.ts`.
+
+2. **Standalone Decorator Setup**:
+   - Write components using modern Angular standalone properties.
+   - Example structure:
+     ```typescript
+     import { Component } from '@angular/core';
+
+     @Component({
+       selector: 'app-login',
+       standalone: true, // Optional in Angular 20+ as standalone is default, but ensure style remains consistent
+       imports: [],
+       templateUrl: './login.html',
+       styleUrl: './login.css'
+     })
+     export class Login {
+       // logic here
+     }
+     ```
+
+3. **Routing Configuration**:
+   - Register route children under lazy-loaded layouts, using `canActivate: [authGuard]` to secure pages.

@@ -1,0 +1,29 @@
+---
+description: Tailwind utility classes, responsive structures, spacing, and typography.
+globs: "src/app/**/*.html, src/app/**/*.css"
+---
+# UI Design & Styling Standards
+
+All user interfaces must look premium, modern, clean, responsive, and styled using TailwindCSS.
+
+## Styling Rules
+
+1. **TailwindCSS Dominance**:
+   - Utilize TailwindCSS utility classes for styling components.
+   - Do not write verbose custom classes in component stylesheet files unless configuring unique keyframes or styling sub-elements that Tailwind cannot easily target.
+
+2. **Premium Design Language**:
+   - Apply vibrant, cohesive color themes (e.g. sleek dark modes, HSL customized palettes, soft borders, subtle gradients).
+   - Use high-quality Google Fonts (e.g. Outfit, Inter) rather than standard browser defaults.
+   - Avoid solid dark blacks; use dark slate/gray colors (`bg-slate-900`, `bg-gray-950`).
+
+3. **Interactive Visuals & Transitions**:
+   - Implement hover and active transformations to make interfaces feel reactive:
+     ```html
+     class="transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
+     ```
+   - Focus on subtle micro-animations (e.g., scale transitions, spinner animations, fade-ins for loaded elements).
+
+4. **Responsive Layouts**:
+   - Design with a mobile-first approach. Use responsive prefix modifiers (`sm:`, `md:`, `lg:`) to structure columns and spacing correctly across screen heights and widths.
+   - Use `grid` and `flexbox` layouts. Never use hardcoded absolute pixel width/height positions for main containers.
