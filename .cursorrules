@@ -1,0 +1,18 @@
+# Global Cursor Rules (Axon Project)
+
+These rules apply globally across both the FastAPI Backend and the Angular Frontend. Follow these tenets in all generated code and conversations.
+
+## 1. Engineering Philosophy (Anti-Overengineering)
+- **Prefer Simplicity over Cleverness**: Write code that is easy to read, debug, and maintain. Do not implement complex patterns (like unnecessary abstraction layers, registries, or factories) unless explicitly requested.
+- **No Placeholders**: Never write placeholders, mock outputs, or `// TODO` tags. All generated code must be fully functional and production-ready.
+- **YAGNI (You Aren't Gonna Need It)**: Do not write code for future requirements that are not currently specified.
+- **KISS & DRY**: Keep methods short and focused on a single responsibility. Extract shared helper logic only when duplicated multiple times.
+
+## 2. Code Quality & Typing
+- **Strict TypeScript & Python Types**: Always annotate functions, arguments, and return types explicitly. Avoid the use of `any` in TypeScript or un-typed parameters in Python.
+- **SOLID Design Principles**: Enforce Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion where appropriate.
+- **Linting & Formatting**: Follow formatting rules defined by `black`/`ruff` in Python and standard ESLint configurations in Angular.
+
+## 3. Communication Style
+- Include comments only when explaining complex non-obvious logic or regulatory specifications.
+- Avoid repeating explanations. Focus on clean code, and provide concise details of files modified or created.
