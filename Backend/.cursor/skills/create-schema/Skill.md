@@ -1,6 +1,6 @@
 # Skill: Create Schema
 
-This skill outlines how to define request and response validation structures using Pydantic v2 in `src/schemas/`.
+This skill outlines how to define request and response validation structures using Pydantic v2 in `src/modules/<module_name>/schemas.py`.
 
 ## Guidelines
 
@@ -15,7 +15,8 @@ This skill outlines how to define request and response validation structures usi
 ## Example Schemas
 
 ```python
-from pydantic import BaseModel, Field, EmailStr # type: ignore
+# src/modules/exercises/schemas.py
+from pydantic import BaseModel, Field
 from typing import Optional, List
 
 class addExercise(BaseModel):

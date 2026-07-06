@@ -1,6 +1,6 @@
 ---
 description: RESTful API standards, response wrapping, validation, and rate-limiting.
-globs: "src/controllers/**/*.py"
+globs: "src/modules/**/router.py, src/modules/workouts/routers/*.py"
 ---
 # API Standards Rules
 
@@ -10,11 +10,6 @@ All API endpoints must follow standard RESTful conventions, return structured re
 
 1. **RESTful Naming Conventions**:
    - Resource paths must be plural and lowercase (e.g. `/users`, `/workout-plans`, `/blogs`).
-   - Use standard HTTP methods:
-     - `GET`: Retrieve list or single item.
-     - `POST`: Create a resource.
-     - `PUT`: Update a resource (or patch where suitable).
-     - `DELETE`: Delete a resource.
 
 2. **HTTP Status Codes**:
    - `GET` / `PUT` / `POST` (update): `status.HTTP_200_OK`
@@ -22,36 +17,25 @@ All API endpoints must follow standard RESTful conventions, return structured re
    - `DELETE`: `status.HTTP_204_NO_CONTENT` (if no body is returned) or `200_OK` if returning a success message.
 
 3. **Response Schema Wrapper**:
-   - All controller responses must return an instance of `Response` (`src.utils.response.Response`) wrapping data.
-   - Example structure:
-     ```json
-     {
-       "success": true,
-       "message": "Resource retrieved successfully",
-       "data": { ... }
-     }
-     ```
+   - All router responses must return an instance of `Response` (`src.utils.response.Response`) wrapping data.
 
 4. **Input Validation & Forms**:
-   - Define request schemas in `src/schemas/*_schema.py`.
-   - If endpoints accept file uploads, use `Form(...)` and `File(...)` parameters in the controller, then map them to the Pydantic schema using a constructor:
-     ```python
-     body = addSchema(field=field, ...)
-     ```
+   - Define request schemas in `src/modules/<module_name>/schemas.py`.
 
 5. **Rate Limiting**:
-   - Decorate controller routes with `@limiter.limit("X/minute")`.
+   - Decorate router routes with `@limiter.limit("X/minute")`.
    - Always include `request: Request` in the route parameter list so the limiter can track client IPs.
 
 ## Example Route Setup
 
 ```python
-from fastapi import APIRouter, Depends, Request, status
+# src/modules/blogs/router.py
+from fastapi import APIRouter, Depends, Request, status, Form, File, UploadFile
 from sqlalchemy.orm import Session
 from src.core.db import get_db
 from src.utils.rate_limiting import limiter
-from src.schemas.blog_schema import BlogUpsertSchema
-from src.services.blog_service import upsert_blog_service
+from src.modules.blogs.schemas import BlogUpsertSchema
+from src.modules.blogs.service import upsert_blog_service
 
 router = APIRouter()
 

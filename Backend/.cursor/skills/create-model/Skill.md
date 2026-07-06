@@ -1,6 +1,6 @@
 # Skill: Create Model
 
-This skill outlines how to build SQLAlchemy database models inside `src/models/` and link them to the project database schema.
+This skill outlines how to build SQLAlchemy database models inside `src/modules/<module_name>/models.py` (or `models/*.py` for larger modules).
 
 ## Guidelines
 
@@ -12,13 +12,14 @@ This skill outlines how to build SQLAlchemy database models inside `src/models/`
    ```
 4. Define relationships clearly. Always use `back_populates` on both sides of the relationship rather than `backref`.
 5. Enforce cascading deletes explicitly on parent-child relations if the child depends fully on the parent: `cascade="all, delete-orphan"`.
-6. Always register models by importing them inside `src/models/__init__.py` to ensure Alembic autogenerate captures them.
+6. Always register models by importing them inside `migrations/env.py` to ensure Alembic autogenerate captures them.
 
 ## Example Model File
 
 ```python
-from sqlalchemy import Column, String, ForeignKey, DateTime, Integer # type: ignore
-from sqlalchemy.orm import relationship # type: ignore
+# src/modules/workouts/models/workoutday.py
+from sqlalchemy import Column, String, ForeignKey, DateTime, Integer
+from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 import uuid
 from src.core.db import Base

@@ -1,13 +1,13 @@
 # Skill: Create Cloudinary Upload
 
-This skill documents how to integrate image and video uploads using the custom Cloudinary service layer.
+This skill documents how to integrate image and video uploads using the media module service.
 
 ## Guidelines
 
 1. **Service Imports**:
    Use the utility uploaders and deleters:
    ```python
-   from src.services.cloudinary_service import upload_image, upload_video, delete_image, delete_video
+   from src.modules.media.service import upload_image, upload_video, delete_image, delete_video
    ```
 2. **Uploading Media**:
    - `upload_image(file)` and `upload_video(file)` accept a `fastapi.UploadFile` object.
@@ -15,7 +15,7 @@ This skill documents how to integrate image and video uploads using the custom C
 3. **Database Representation**:
    - Save upload keys/URLs to the `Media` model database table:
      ```python
-     from src.models.media_model import Media
+     from src.modules.media.models import Media
      ```
    - Store details with `entity_type` (e.g. `"blog"`, `"user_profile"`), `entity_id` (the parent entity UUID), `media_type` (`"image"` or `"video"`), and `provider="cloudinary"`.
 4. **Deleting Media**:
@@ -31,14 +31,12 @@ This skill documents how to integrate image and video uploads using the custom C
 ```python
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
-from src.models.media_model import Media
-from src.services.cloudinary_service import upload_image
+from src.modules.media.models import Media
+from src.modules.media.service import upload_image
 
 def attach_profile_image(user_id: str, image: UploadFile, db: Session):
-    # 1. Upload file to Cloudinary
     result = upload_image(image)
     
-    # 2. Persist media record to DB
     media = Media(
         entity_type="user_profile",
         entity_id=user_id,

@@ -1,10 +1,10 @@
 # Skill: Create Migration
 
-This skill outlines how to generate and execute Alembic database migrations after changes are made to the database models.
+This skill outlines how to generate and execute Alembic database migrations after changes are made to database models.
 
 ## Guidelines
 
-1. Make sure all models are imported inside `src/models/__init__.py`. Otherwise, Alembic's autogenerate command will not recognize your new tables or columns.
+1. Make sure all models are imported inside `migrations/env.py`. Otherwise, Alembic's autogenerate command will not recognize your new tables or columns.
 2. In the terminal, ensure you are in the `/Backend` directory and the virtual environment is activated.
 3. Run the autogenerate revision command:
    ```bash

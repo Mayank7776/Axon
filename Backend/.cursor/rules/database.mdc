@@ -1,6 +1,6 @@
 ---
 description: SQLAlchemy ORM rules, UUID keys, eager loading, and Alembic migrations.
-globs: "src/models/**/*.py"
+globs: "src/modules/**/models.py, src/modules/workouts/models/*.py"
 ---
 # Database Guidelines & Rules
 
@@ -40,10 +40,12 @@ All database models must use SQLAlchemy, map relationships explicitly, prevent N
    - Use eager loading in SQLAlchemy queries via `joinedload` or `selectinload` when returning entities with their nested relations.
      ```python
      from sqlalchemy.orm import joinedload
+     # src/modules/blogs/service.py
      blogs = db.query(Blog).options(joinedload(Blog.category)).all()
      ```
 
 5. **Migrations**:
    - Every schema change must have a corresponding Alembic migration.
    - Generate migration files using: `alembic revision --autogenerate -m "Add table_name table"`
-   - Ensure you verify migration contents (especially constraint names and type translations for PostgreSQL) before deploying.
+   - Ensure all models are imported inside `migrations/env.py`.
+

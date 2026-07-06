@@ -1,6 +1,6 @@
 ---
 description: General code formatting, lints, typing, and style guides.
-globs: "src/**/*.py"
+globs: "src/modules/**/*.py, src/core/**/*.py, src/utils/**/*.py"
 ---
 # Coding Standards
 
@@ -15,18 +15,19 @@ Follow these coding standards to maintain consistency, readability, and performa
 2. **Naming Conventions**:
    - **Classes**:
      - SQLAlchemy models: PascalCase (e.g., `WorkoutPlan`, `User`).
-     - Pydantic Input/Request Schemas: camelCase (e.g., `addUser`, `updateUser`, `BlogUpsertSchema`). Note: This is a project-specific convention.
+     - Pydantic Input/Request Schemas: camelCase (e.g., `addUser`, `updateUser`, `BlogUpsertSchema`).
      - Pydantic Response/Output Schemas: PascalCase.
    - **Variables & Functions**:
      - Use `snake_case` for all function names, route endpoints (internal logic), variables, and database column names.
    - **File Names**:
-     - Use `snake_case` filenames (e.g., `workoutplan.py`, `auth_service.py`).
+     - Standard module files: `models.py`, `router.py`, `service.py`, `schemas.py`, `dependency.py`.
+     - Sub-directories for larger modules: `models/*.py`, `routers/*.py`, `services/*.py`, `schemas/*.py`.
 
 3. **Type Annotations**:
-   - Write strict python type hints. Use Union types like `str | None` instead of `Optional[str]` for clean modern Python code.
+   - Write strict python type hints. Use Union types like `str | None` instead of `Optional[str]`.
    - Add `# type: ignore` comments only where external packages lack typings (e.g. `import jwt # type: ignore`).
 
 4. **SOLID & DRY Principles**:
    - Keep functions focused on a single responsibility.
    - Restructure repetitive queries or utility methods into helper files or within the service layer.
-   - Avoid nesting deep conditional hierarchies; prefer early returns.
+

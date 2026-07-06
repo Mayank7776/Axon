@@ -19,7 +19,7 @@ Whenever you are tasked with creating, editing, or refactoring code, read this f
 ### Skills (`Backend/.cursor/skills/`)
 Each skill is contained in a separate directory with a `Skill.md` file detailing requirements and full templates:
 *   **CRUD Scaffolding**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Backend/.cursor/skills/create-crud-module/Skill.md) (Scaffolds Model, Schema, Service, Controller, and Migration)
-*   **FastAPI Controllers**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Backend/.cursor/skills/create-controller/Skill.md) (Controller setup with rate limiters and DI)
+*   **FastAPI Routers**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Backend/.cursor/skills/create-controller/Skill.md) (Router setup with rate limiters and DI)
 *   **Business Logic Services**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Backend/.cursor/skills/create-service/Skill.md) (Service queries, searches, sorting, and offset pagination)
 *   **Pydantic Validation**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Backend/.cursor/skills/create-schema/Skill.md) (camelCase and PascalCase schema structures)
 *   **SQLAlchemy Models**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Backend/.cursor/skills/create-model/Skill.md) (Models with UUID primary keys and back_populates)
@@ -44,5 +44,5 @@ Each skill is contained in a separate directory with a `Skill.md` file detailing
 *   **Standalone Components**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Frontend/.cursor/skills/create-component/Skill.md) (Scaffolds component declarations, selector, and templates)
 *   **API Services Wrapper**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Frontend/.cursor/skills/create-service/Skill.md) (REST wrapper services injecting `ApiService`)
 *   **Reactive Forms**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Frontend/.cursor/skills/create-form/Skill.md) (Constructs typed forms and validation alerts)
-*   **Data Grid Tables**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Frontend/.cursor/skills/create-datatable.md/Skill.md) (Server paginated list tables with sorting and debounced search)
+*   **Data Grid Tables**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Frontend/.cursor/skills/create-datatable/Skill.md) (Server paginated list tables with sorting and debounced search)
 *   **Endpoint Wireups**: [Skill.md](file:///c:/Users/Evince/Desktop/Axon/Frontend/.cursor/skills/create-api-integration/Skill.md) (Handling API request states and loading indicators)

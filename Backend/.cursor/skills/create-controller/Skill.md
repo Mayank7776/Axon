@@ -1,26 +1,27 @@
-# Skill: Create Controller
+# Skill: Create Router
 
-This skill shows how to construct clean controllers inside `src/controllers/` that adhere strictly to request/response handling.
+This skill shows how to construct routers inside `src/modules/<module_name>/router.py` that handle request/response orchestration.
 
 ## Guidelines
 
-1. Always initialize `router = APIRouter()`.
-2. Keep the controller method body extremely lean. It should only validate headers/body/params, call the service layer, and return the response.
-3. Inject the DB session dependency using `db: Session = Depends(get_db)`.
-4. Inject authentication when security is required: `current_user: User = Depends(validateToken)`.
+1. Initialize `router = APIRouter()`.
+2. Keep the router method body lean: validate headers/body/params, call the service layer, and return the response wrapper.
+3. Inject the DB session: `db: Session = Depends(get_db)`.
+4. Inject authentication when security is required: `current_user: User = Depends(validateToken)` from `src.modules.auth.dependency`.
 5. Decorate all public and private routes with SlowAPI rate limiters: `@limiter.limit("rate/duration")`. This requires importing and passing `request: Request`.
 
 ## Template Code
 
 ```python
+# src/modules/items/router.py
 from fastapi import APIRouter, Depends, Request, status, Form, UploadFile, File
 from sqlalchemy.orm import Session
 from src.core.db import get_db
 from src.utils.rate_limiting import limiter
-from src.controllers.dependency.auth_dependency import validateToken
-from src.models.user_model import User
-from src.schemas.my_schema import addMyEntity
-from src.services.my_service import add_my_entity, delete_my_entity
+from src.modules.auth.dependency import validateToken
+from src.modules.users.models import User
+from src.modules.items.schemas import addMyEntity
+from src.modules.items.service import add_my_entity, delete_my_entity
 
 router = APIRouter()
 
@@ -32,21 +33,5 @@ async def create_entity(
     db: Session = Depends(get_db),
     current_user: User = Depends(validateToken)
 ):
-    """
-    Creates a new entity. Only authenticated users can perform this.
-    """
     return add_my_entity(body, current_user.id, db)
-
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-@limiter.limit("10/minute")
-def delete_entity(
-    request: Request,
-    id: str,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(validateToken)
-):
-    """
-    Deletes an entity. Verifies ownership in service layer.
-    """
-    return delete_my_entity(id, current_user, db)
 ```

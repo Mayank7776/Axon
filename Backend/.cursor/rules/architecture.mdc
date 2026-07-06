@@ -1,74 +1,52 @@
 ---
-description: Enforce Controller -> Service -> Model architecture patterns in FastAPI.
-globs: "src/**/*.py"
+description: Enforce Modular Monolithic architectural patterns in FastAPI.
+globs: "src/modules/**/*.py"
 ---
 # Backend Architecture Rules
 
-You must strictly adhere to the Controller -> Service -> Model architecture pattern for all code written in the Backend.
+You must strictly adhere to the Modular Monolithic architecture pattern for all code written in the Backend. Code must be grouped by business modules inside `src/modules/` rather than by technical layers.
 
 ## Core Rules
 
-1. **Controllers (`src/controllers/**/*.py`)**:
-   - MUST only handle request validation (Pydantic), route definitions (`APIRouter`), HTTP responses, and rate-limiting rules.
-   - MUST NOT contain any business logic, calculations, or database operations.
-   - MUST inject the DB session (`Depends(get_db)`) and authentication dependencies (`Depends(validateToken)`) and pass them to the service.
-   - Example endpoints should look like:
-     ```python
-     @router.get("/{id}", status_code=status.HTTP_200_OK)
-     def get_item(request: Request, id: str, db: Session = Depends(get_db)):
-         return get_item_by_id(id, db)
-     ```
+1. **Business Modules (`src/modules/<module_name>/`)**:
+   - Each module represents a self-contained business domain (e.g. `users`, `blogs`, `chat`).
+   - Standard components within a module:
+     - `models.py`: Database models (SQLAlchemy ORM).
+     - `schemas.py`: Pydantic input and output validation models.
+     - `service.py`: Business logic, DB operations, and calculations.
+     - `router.py`: FastAPI route definitions, validation, status codes, and rate limits.
+   - For larger domains (like `workouts`), technical layer subdirectories (`models/`, `routers/`, `services/`, `schemas/`) can be used to organize files.
 
-2. **Services (`src/services/**/*.py`)**:
-   - MUST contain all business logic, database operations, external integrations (e.g. Cloudinary, email), pagination, filtering, and sorting.
+2. **Router Layer (`router.py`)**:
+   - MUST only handle request validation (Pydantic), route paths, HTTP responses, status codes, and rate-limiting.
+   - MUST NOT contain business logic or raw database queries.
+
+3. **Service Layer (`service.py`)**:
+   - MUST contain all database CRUD operations, business logic, and integrations.
    - MUST return responses using the unified response wrapper schema: `src.utils.response.Response`.
-   - Never raise raw exceptions if they can be handled gracefully; use `HTTPException` where appropriate to propagate error statuses back.
-
-3. **Models (`src/models/**/*.py`)**:
-   - Define database models inheriting from `Base` (`src.core.db.Base`).
-   - Use UUIDs as primary keys (`String(36)` with a default uuid generator).
-   - Use timezone-aware timestamps for audit logs (`created_at`, `updated_at`).
 
 ## Good vs. Bad Code Patterns
 
-### ❌ BAD (Business logic and DB queries inside controller)
+### ❌ BAD (Legacy layer path or direct DB query in router)
 ```python
-# controllers/item_controller.py
-@router.post("/")
-def create_item(item: ItemSchema, db: Session = Depends(get_db)):
-    # Violates architecture: direct DB access and business logic in controller!
-    existing = db.query(Item).filter(Item.name == item.name).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Item exists")
-    db_item = Item(name=item.name, category_id=item.category_id)
-    db.add(db_item)
-    db.commit()
-    return db_item
+# src/modules/users/router.py
+# Violates architecture: direct DB query and legacy layered path imports!
+from src.models.user_model import User 
+
+@router.get("/{id}")
+def get_user(id: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == id).first()
+    return user
 ```
 
-###  GOOD (Proper Separation of Concerns)
+###  GOOD (Modular monolithic structure and service delegation)
 ```python
-# controllers/item_controller.py
-@router.post("/", status_code=status.HTTP_201_CREATED)
+# src/modules/users/router.py
+from src.modules.users.service import get_user_by_id
+
+@router.get("/{id}", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")
-def create_item(request: Request, body: addItemSchema, db: Session = Depends(get_db)):
-    return add_item(body, db)
-
-# services/item_service.py
-from src.utils.response import Response
-
-def add_item(body: addItemSchema, db: Session) -> Response:
-    existing = db.query(Item).filter(Item.name == body.name).first()
-    if existing:
-        return Response(success=False, message="Item already exists", data=None)
-    
-    db_item = Item(name=body.name, category_id=body.category_id)
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    return Response(
-        success=True,
-        message="Item created successfully",
-        data={"id": db_item.id, "name": db_item.name}
-    )
+def get_user(request: Request, id: str, db: Session = Depends(get_db)):
+    return get_user_by_id(id, db)
 ```
+
