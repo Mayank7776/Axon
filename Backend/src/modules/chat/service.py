@@ -1,4 +1,4 @@
-from src.mo000000dules.users.models import User
+from src.modules.users.models import User
 from src.modules.chat.models import ChatSession
 from src.modules.chat.models import ChatMessage
 from src.modules.chat.schemas import CreateSessionRequest
