@@ -3,6 +3,8 @@ from datetime import datetime, timezone #type: ignore
 from src.core.db import Base
 from sqlalchemy.orm import relationship #type: ignore
 import uuid
+from src.modules.workouts.models.nutrition_chart import NutritionChart
+
 
 def utc_now():
     return datetime.now(timezone.utc)
