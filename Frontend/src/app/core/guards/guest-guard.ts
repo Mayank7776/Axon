@@ -1,15 +1,16 @@
-import { inject } from '@angular/core/primitives/di';
+import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { Auth } from '../../services/auth';
 
 export const guestGuard: CanActivateFn = (route, state) => {
-  const auth = inject(Auth);
   const router = inject(Router);
-  if (auth.validateToken()) {
-    router.navigate(['/dashboard']);
+  const token = localStorage.getItem('accessToken');
+
+  if (token) {
+    router.navigate(['/home']);
     return false;
   }
 
   return true;
-};  
+};
+  
 

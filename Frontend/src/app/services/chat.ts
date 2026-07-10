@@ -17,7 +17,7 @@ export class Chat {
     return this.api.get<any>(`/chat/sessions/${sessionId}`);
   }
 
-  createSession(payload: { user_id: string; title: string }) {
+  createSession(payload: { user_id: string; agent_type: string; title?: string }) {
     return this.api.post<any>('/chat/sessions', payload);
   }
 
@@ -33,7 +33,7 @@ export class Chat {
     return this.api.get<any[]>(`/chat/sessions/${sessionId}/messages`);
   }
 
-  sendMessage(payload: { session_id: string; message_content: string; role: string }) {
+  sendMessage(payload: { session_id: string; message: string }) {
     return this.api.post<any>('/chat/messages', payload);
   }
 }

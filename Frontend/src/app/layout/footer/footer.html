@@ -1,1 +1,99 @@
-<p>footer works!</p>
+<footer class="bg-slate-900 text-slate-400 border-t border-slate-800 transition-all duration-300">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      
+      <!-- Left Section: Logo & Quote -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center">
+          <img src="/AxonLogo.png" alt="Axon Logo" class="h-14 w-auto object-contain brightness-110" />
+        </div>
+        <p class="text-sm italic text-slate-400 font-medium leading-relaxed max-w-sm">
+          "The dream of a healthy body is made possible with the right software. Axon is your companion in fitness."
+        </p>
+      </div>
+
+      <!-- Center Section: Navigation Pages -->
+      <div class="flex flex-col items-start md:items-center gap-4">
+        <h3 class="text-sm font-semibold tracking-wider text-slate-200 uppercase">Pages</h3>
+        <ul class="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center">
+          <li>
+            <a routerLink="/home" class="text-sm hover:text-white transition-colors duration-200">
+              Home
+            </a>
+          </li>
+          <li>
+            <a routerLink="/workouts" class="text-sm hover:text-white transition-colors duration-200">
+              Workouts
+            </a>
+          </li>
+          <li>
+            <a routerLink="/progress" class="text-sm hover:text-white transition-colors duration-200">
+              Progress
+            </a>
+          </li>
+          <li>
+            <a routerLink="/chat" class="text-sm hover:text-white transition-colors duration-200">
+              Chat
+            </a>
+          </li>
+          <li>
+            <a routerLink="/blog" class="text-sm hover:text-white transition-colors duration-200">
+              Blog
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Section: Social Media Logos -->
+      <div class="flex flex-col items-start md:items-end gap-4">
+        <h3 class="text-sm font-semibold tracking-wider text-slate-200 uppercase">Follow Us</h3>
+        <div class="flex gap-4">
+          <!-- Instagram -->
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
+             class="p-2.5 rounded-xl bg-slate-800 hover:bg-violet-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1"
+             aria-label="Instagram">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051c-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+            </svg>
+          </a>
+
+          <!-- Twitter (X) -->
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" 
+             class="p-2.5 rounded-xl bg-slate-800 hover:bg-sky-500 hover:text-white transition-all duration-300 transform hover:-translate-y-1"
+             aria-label="Twitter">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+
+          <!-- YouTube -->
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" 
+             class="p-2.5 rounded-xl bg-slate-800 hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1"
+             aria-label="YouTube">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.498 6.163a3.003 3.003 0 00-2.11-2.107C19.53 3.5 12 3.5 12 3.5s-7.53 0-9.388.556a3.003 3.003 0 00-2.11 2.107C0 8.017 0 12 0 12s0 3.983.502 5.837a3.003 3.003 0 002.11 2.107C4.47 20.5 12 20.5 12 20.5s7.53 0 9.388-.556a3.003 3.003 0 002.11-2.107C24 15.983 24 12 24 12s0-3.983-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+            </svg>
+          </a>
+
+          <!-- Facebook -->
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
+             class="p-2.5 rounded-xl bg-slate-800 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1"
+             aria-label="Facebook">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom copyright -->
+    <div class="mt-12 border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+      <p>&copy; 2026 Axon. All rights reserved.</p>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>

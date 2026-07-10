@@ -41,8 +41,9 @@ def create_session(db: Session, payload: CreateSessionRequest):
             success=True,
             message="Session created successfully",
             data={
-                "session_id": session.id,
-                "title": session.title
+                "id": session.id,
+                "title": session.title,
+                "agent_type": session.agent_type
             }
         )
         

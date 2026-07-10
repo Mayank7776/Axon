@@ -14,6 +14,9 @@ from slowapi import _rate_limit_exceeded_handler #type: ignore
 from slowapi.middleware import SlowAPIMiddleware #type: ignore
 from src.core import cloudinary  # executes config
 
+from fastapi.middleware.cors import CORSMiddleware
+from src.core.settings import settings
+
 app = FastAPI()
 
 # Register limiter
@@ -27,6 +30,13 @@ app.add_exception_handler(
 
 # Add middleware
 app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.FRONTEND_URL, "http://localhost:4200", "http://127.0.0.1:4200"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(user_router, prefix="/users", tags=["Users"])
 app.include_router(role_router, prefix="/roles", tags=["Roles"])

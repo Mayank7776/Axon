@@ -1,1 +1,110 @@
-<p>home works!</p>
+<!-- Hero Poster Banner Section -->
+<section class="relative w-full h-[380px] overflow-hidden flex items-center justify-center text-center">
+  <!-- Responsive Poster Background Image -->
+  <picture class="absolute inset-0 w-full h-full">
+    <!-- Desktop / Web (lg: 1024px and up) -->
+    <source media="(min-width: 1024px)" srcset="/Images/home/Background.png">
+    <!-- Tablet (md: 768px to 1023px) -->
+    <source media="(min-width: 768px)" srcset="/Images/home/TabBackground.png">
+    <!-- Mobile (default, less than 768px) -->
+    <img 
+      src="/Images/home/MobileBackground.png" 
+      alt="AI Gym Fitness Journey" 
+      class="absolute inset-0 w-full h-full object-cover select-none"
+    />
+  </picture>
+</section>
+
+<!-- Meet the Team Section -->
+<section class="bg-slate-50 py-8 sm:py-12">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Title -->
+    <div class="text-center mb-12 sm:mb-10">
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
+        Meet Your AI Fitness Team
+      </h2>
+    </div>
+
+    <!-- AI Models Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      
+      <!-- Card 1: AI Personal Trainer -->
+      <div class="flex flex-col items-center justify-between bg-white border border-slate-100 rounded-2xl p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-violet-200 group">
+        <div class="flex flex-col items-center">
+          <!-- Icon Circle Wrapper -->
+          <div class="h-16 w-16 rounded-full flex items-center justify-center bg-violet-600 mb-6 transition-all duration-300 group-hover:scale-110 group-hover:bg-violet-700">
+            <img 
+              src="/Images/home/PersonalTrainner.png" 
+              alt="AI Personal Trainer" 
+              class="h-8 w-8 object-contain brightness-0 invert transition-transform duration-300 group-hover:rotate-6"
+            />
+          </div>
+          <h3 class="text-xl font-bold text-slate-800 mb-3">AI Personal Trainer</h3>
+          <p class="text-sm text-slate-500 font-medium leading-relaxed mb-6">
+            Get customized workout plans and real-time form corrections
+          </p>
+        </div>
+        <!-- Active link connected to chat page -->
+        <a 
+          [routerLink]="['/chat']"
+          [queryParams]="{agent: 'trainer', newChat: true}"
+          class="w-full text-center bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-3 px-6 text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]"
+        >
+          Start Training
+        </a>
+      </div>
+
+      <!-- Card 2: AI Nutritionist -->
+      <div class="flex flex-col items-center justify-between bg-white border border-slate-100 rounded-2xl p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-emerald-200 group">
+        <div class="flex flex-col items-center">
+          <!-- Icon Circle Wrapper -->
+          <div class="h-16 w-16 rounded-full flex items-center justify-center bg-emerald-600 mb-6 transition-all duration-300 group-hover:scale-110 group-hover:bg-emerald-700">
+            <img 
+              src="/Images/home/Nutrition.png" 
+              alt="AI Nutritionist" 
+              class="h-8 w-8 object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
+          <h3 class="text-xl font-bold text-slate-800 mb-3">AI Nutritionist</h3>
+          <p class="text-sm text-slate-500 font-medium leading-relaxed mb-6">
+            Receive meal plans tailored to your fitness goals and dietary needs
+          </p>
+        </div>
+        <a 
+          [routerLink]="['/chat']"
+          [queryParams]="{agent: 'nutrition', newChat: true}"
+          class="w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-3 px-6 text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]"
+        >
+          Get Meal Plan
+        </a>
+      </div>
+
+      <!-- Card 3: AI Workout Designer -->
+      <div class="flex flex-col items-center justify-between bg-white border border-slate-100 rounded-2xl p-8 text-center transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-orange-200 group">
+        <div class="flex flex-col items-center">
+          <!-- Icon Circle Wrapper -->
+          <div class="h-16 w-16 rounded-full flex items-center justify-center bg-orange-500 mb-6 transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-600">
+            <img 
+              src="/Images/home/WorkoutDesigner.png" 
+              alt="AI Workout Designer" 
+              class="h-8 w-8 object-contain brightness-0 invert transition-transform duration-300 group-hover:-rotate-6"
+            />
+          </div>
+          <h3 class="text-xl font-bold text-slate-800 mb-3">AI Workout Designer</h3>
+          <p class="text-sm text-slate-500 font-medium leading-relaxed mb-6">
+            Design perfect routines based on your equipment and preferences
+          </p>
+        </div>
+        <a 
+          [routerLink]="['/chat']"
+          [queryParams]="{agent: 'designer', newChat: true}"
+          class="w-full text-center bg-orange-500 hover:bg-orange-600 text-white rounded-xl py-3 px-6 text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]"
+        >
+          Design Workout
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>

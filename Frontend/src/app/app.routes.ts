@@ -6,12 +6,12 @@ export const routes: Routes = [
     {
      path: 'login',
      loadComponent: () => import("./auth/login/login").then(m => m.Login),
-     canActivate: [guestGuard]
+     // canActivate: [guestGuard]
     },
     {
      path :'',
      loadComponent: () => import("./layout/main-body/main-body").then(m => m.MainBody),
-     canActivate: [authGuard],
+     // canActivate: [authGuard],
      children : [
         {
           path: '',
@@ -23,8 +23,20 @@ export const routes: Routes = [
          loadComponent: () => import("./features/home/home").then(m => m.Home)
         },
         {
+         path:'workouts',
+         loadComponent: () => import("./features/workouts/workouts").then(m => m.Workouts)
+        },
+        {
+         path:'progress',
+         loadComponent: () => import("./features/progress/progress").then(m => m.Progress)
+        },
+        {
          path:'chat',
          loadComponent: () => import("./features/chat/chat").then(m => m.Chat)
+        },
+        {
+         path:'blog',
+         loadComponent: () => import("./features/blog/blog").then(m => m.Blog)
         }
      ]
     },
